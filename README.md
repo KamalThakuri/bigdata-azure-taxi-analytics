@@ -57,8 +57,6 @@ bigdata-azure-taxi-analytics/
 │   └── 03_analysis_ml.ipynb      ← analytics, gold aggregates, MLlib model
 ├── diagrams/
 │   └── architecture_diagram.png
-└── docs/
-    └── (optional: PDF copy of the report)
 ```
 
 ---

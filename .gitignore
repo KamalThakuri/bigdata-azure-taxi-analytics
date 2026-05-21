@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb_meta
+
+# Data — never commit raw or processed data
+*.parquet
+*.csv
+data/
+data-samples/
+
+# Spark / Databricks artefacts
+*.crc
+_SUCCESS
+_committed_*
+_started_*
+metastore_db/
+derby.log
+spark-warehouse/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets — never commit these
+*.env
+.env.*
+*.pem
+*.key
+secrets/
+credentials/
+
+# Local screenshots (these are in the report, not the repo)
+screenshots/
+
+# Build artifacts
+*.zip
+*.tar.gz

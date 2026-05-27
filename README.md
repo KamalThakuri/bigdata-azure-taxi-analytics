@@ -13,16 +13,16 @@ medallion-architecture storage, and **Unity Catalog** for fine-grained governanc
 
 ## At a Glance
 
-| Metric | Value |
-|---|---|
-| **Records processed** | 38,310,226 |
-| **Compressed size** | 606.3 MB (Parquet + Snappy) |
-| **In-memory size** | ~3 GB (Spark) |
-| **Silver layer (cleaned)** | 35,575,601 records (7.14% removed) |
-| **Gold layer aggregates** | 6 Delta tables |
-| **ML model R²** | 0.5917 (tip-amount linear regression) |
-| **Total Azure cost** | £4.16 |
-| **Hosting region** | Switzerland North |
+| Metric                     | Value                                 |
+| -------------------------- | ------------------------------------- |
+| **Records processed**      | 38,310,226                            |
+| **Compressed size**        | 606.3 MB (Parquet + Snappy)           |
+| **In-memory size**         | ~3 GB (Spark)                         |
+| **Silver layer (cleaned)** | 35,575,601 records (7.14% removed)    |
+| **Gold layer aggregates**  | 6 Delta tables                        |
+| **ML model R²**            | 0.5917 (tip-amount linear regression) |
+| **Total Azure cost**       | £4.16                                 |
+| **Hosting region**         | Switzerland North                     |
 
 ---
 
@@ -31,17 +31,17 @@ medallion-architecture storage, and **Unity Catalog** for fine-grained governanc
 The solution implements the **medallion lakehouse pattern** with five processing layers
 and two cross-cutting concerns (governance + monitoring):
 
-![Architecture Diagram](diagrams/architecture_diagram.png)
+![Architecture Diagram](diagrams/nyctaxi_architecture.drawio.png)
 
-| Layer | Service / Technology |
-|---|---|
-| **Sources** | NYC TLC CloudFront endpoint (HTTPS) |
-| **Ingestion** | Azure Storage Explorer, Azure Data Factory, Databricks notebooks |
-| **Storage** | Azure Data Lake Storage Gen2 (bronze / silver / gold containers) |
-| **Processing** | Azure Databricks Serverless (Spark 3.5, Photon, MLlib, Spark SQL) |
-| **Consumption** | Databricks dashboards (Power BI integration planned) |
-| **Governance** | Microsoft Entra ID, Azure Key Vault, Unity Catalog, Access Connector |
-| **Monitoring** | Azure Monitor, Storage Metrics, Databricks Query History, Cost Management |
+| Layer           | Service / Technology                                                      |
+| --------------- | ------------------------------------------------------------------------- |
+| **Sources**     | NYC TLC CloudFront endpoint (HTTPS)                                       |
+| **Ingestion**   | Azure Storage Explorer, Azure Data Factory, Databricks notebooks          |
+| **Storage**     | Azure Data Lake Storage Gen2 (bronze / silver / gold containers)          |
+| **Processing**  | Azure Databricks Serverless (Spark 3.5, Photon, MLlib, Spark SQL)         |
+| **Consumption** | Databricks dashboards (Power BI integration planned)                      |
+| **Governance**  | Microsoft Entra ID, Azure Key Vault, Unity Catalog, Access Connector      |
+| **Monitoring**  | Azure Monitor, Storage Metrics, Databricks Query History, Cost Management |
 
 ---
 
@@ -64,6 +64,7 @@ bigdata-azure-taxi-analytics/
 ## Notebooks Overview
 
 ### 1. `01_explore_data.ipynb` — Data Exploration
+
 - Configures Unity Catalog External Location paths
 - Lists 12 monthly parquet files (606.3 MB total)
 - Loads all 38.3M records into Spark
@@ -71,6 +72,7 @@ bigdata-azure-taxi-analytics/
 - Performs data quality assessment
 
 ### 2. `02_clean_transform.ipynb` — Bronze → Silver
+
 - Handles schema drift (INT64 vs DOUBLE inconsistencies across months)
 - Applies cleaning rules: nulls, outliers, sanity bounds
 - Engineers 9 derived features (`trip_duration_min`, `pickup_hour`,
@@ -79,6 +81,7 @@ bigdata-azure-taxi-analytics/
 - Result: **35,575,601 clean records, 28 columns**
 
 ### 3. `03_analysis_ml.ipynb` — Analytics & Machine Learning
+
 - Six analytical Spark SQL queries (monthly, hourly, day-of-week, top zones,
   tipping behaviour, payment mix)
 - Writes 6 aggregate Delta tables to gold layer
@@ -93,6 +96,7 @@ bigdata-azure-taxi-analytics/
 ## How to Reproduce
 
 ### Prerequisites
+
 - Microsoft Azure subscription (Azure for Students is sufficient)
 - Resources required (all in the same region — recommend Switzerland North):
   - Storage Account (ADLS Gen2 with hierarchical namespace)
@@ -131,6 +135,7 @@ bigdata-azure-taxi-analytics/
 6. **Import the notebooks** into your Databricks workspace.
 
 7. **Update the storage account name** in each notebook's setup cell:
+
    ```python
    storage_account_name = "<your_storage_account_name>"
    ```
@@ -166,14 +171,14 @@ included in the published dataset.
 
 ## Cost Breakdown
 
-| Service | Cost (GBP) |
-|---|---|
-| Azure Databricks | £4.15 |
-| Storage Account | <£0.01 |
-| Azure Synapse Analytics (initial exploration) | <£0.01 |
-| Azure Key Vault | <£0.01 |
-| Bandwidth | £0.00 |
-| **Total** | **£4.16** |
+| Service                                       | Cost (GBP) |
+| --------------------------------------------- | ---------- |
+| Azure Databricks                              | £4.15      |
+| Storage Account                               | <£0.01     |
+| Azure Synapse Analytics (initial exploration) | <£0.01     |
+| Azure Key Vault                               | <£0.01     |
+| Bandwidth                                     | £0.00      |
+| **Total**                                     | **£4.16**  |
 
 ---
 
